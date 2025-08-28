@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manthan Mittal - AI Engineer</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter for body, Orbitron for headings -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS for futuristic theme and animations -->
+    <style>
+        :root {
+            --primary-glow: #00f6ff;
+            --secondary-glow: #7d2eff;
+            --bg-dark: #02001a;
+            --bg-light: #0a0133;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #e0e0e0;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        /* Custom font for headings */
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* Canvas for 3D background */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.5; /* Slightly reduced opacity for better text readability */
+        }
+
+        /* Neon text effect */
+        .text-glow {
+            text-shadow: 0 0 5px var(--primary-glow), 0 0 10px var(--primary-glow), 0 0 20px var(--primary-glow), 0 0 40px var(--secondary-glow);
+        }
+        
+        .text-glow-secondary {
+            text-shadow: 0 0 5px var(--secondary-glow), 0 0 10px var(--secondary-glow);
+        }
+
+        /* Glassmorphism effect for cards */
+        .glass-card {
+            background: rgba(10, 1, 51, 0.3);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 246, 255, 0.2);
+            transition: all 0.3s ease;
+            transform-style: preserve-3d; /* For tilt effect */
+        }
+
+        .glass-card:hover {
+            border-color: rgba(0, 246, 255, 0.6);
+            box-shadow: 0 0 25px rgba(0, 246, 255, 0.3);
+            transform: translateY(-5px) scale(1.02); /* Added scale effect */
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-glow);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-glow);
+        }
+
+        /* Animation for elements on scroll */
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .scroll-animate.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Glowing button style */
+        .glow-btn {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            transition: color 0.3s;
+        }
+        .glow-btn:disabled {
+            cursor: not-allowed;
+            color: #6b7280; /* Gray-500 */
+        }
+        .glow-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: conic-gradient(
+                transparent,
+                var(--primary-glow),
+                transparent 30%
+            );
+            transform: translate(-50%, -50%);
+            animation: rotate 4s linear infinite;
+            z-index: -2;
+        }
+        .glow-btn::after {
+            content: '';
+            position: absolute;
+            top: 1px;
+            left: 1px;
+            right: 1px;
+            bottom: 1px;
+            background: var(--bg-light);
+            border-radius: 0.5rem; /* Match button's border-radius */
+            z-index: -1;
+        }
+        
+        @keyframes rotate {
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        /* Typing cursor effect */
+        .typing-cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1.8rem;
+            background-color: var(--primary-glow);
+            animation: blink 0.8s infinite;
+            margin-left: 5px;
+            box-shadow: 0 0 5px var(--primary-glow);
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        /* Animated SVG Icons */
+        .skill-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1rem;
+            filter: drop-shadow(0 0 5px var(--secondary-glow));
+            animation: pulse 3s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- 3D Background Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Header & Navigation -->
+    <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 glass-card" id="navbar">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-orbitron font-bold text-white text-glow">MM</a>
+            <nav class="hidden md:flex space-x-8">
+                <a href="#about" class="text-gray-300 hover:text-white hover:text-glow-secondary transition-all duration-300">About</a>
+                <a href="#skills" class="text-gray-300 hover:text-white hover:text-glow-secondary transition-all duration-300">Skills</a>
+                <a href="#projects" class="text-gray-300 hover:text-white hover:text-glow-secondary transition-all duration-300">Projects</a>
+                <a href="#contact" class="text-gray-300 hover:text-white hover:text-glow-secondary transition-all duration-300">Contact</a>
+            </nav>
+            <button id="mobile-menu-btn" class="md:hidden text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+            <a href="#about" class="block py-2 text-gray-300 hover:text-white">About</a>
+            <a href="#skills" class="block py-2 text-gray-300 hover:text-white">Skills</a>
+            <a href="#projects" class="block py-2 text-gray-300 hover:text-white">Projects</a>
+            <a href="#contact" class="block py-2 text-gray-300 hover:text-white">Contact</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6">
+
+        <!-- Hero Section -->
+        <section id="hero" class="min-h-screen flex items-center justify-center text-center">
+            <div class="z-10">
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-orbitron font-extrabold text-white text-glow mb-4">
+                    Manthan Mittal
+                </h1>
+                <p class="text-xl md:text-2xl lg:text-3xl text-gray-300 h-12">
+                    <span id="typing-text" class="text-glow-secondary"></span><span class="typing-cursor"></span>
+                </p>
+                <p class="max-w-2xl mx-auto mt-6 text-gray-400">
+                    Crafting intelligent systems that learn, adapt, and shape the future. Specializing in Deep Learning, Computer Vision, and Neural Networks.
+                </p>
+                <a href="#projects" class="mt-8 inline-block px-8 py-3 rounded-lg text-white font-semibold glow-btn">
+                    View My Work
+                </a>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-20 scroll-animate">
+            <h2 class="text-4xl font-orbitron font-bold text-center mb-12 text-glow-secondary">About Me</h2>
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <div class="md:w-2/3">
+                    <p class="text-lg mb-4 text-gray-300">
+                        Hello! I'm Manthan Mittal, an AI Engineer with a passion for building intelligent solutions to complex problems. My journey into the world of artificial intelligence began with a fascination for how machines can perceive and understand the world around them.
+                    </p>
+                    <p class="mb-4 text-gray-300">
+                        With a strong foundation in computer science and mathematics, I specialize in developing and deploying machine learning models, particularly in the realms of computer vision and natural language processing. I thrive on pushing the boundaries of what's possible, from creating intricate neural network architectures to optimizing models for real-world performance.
+                    </p>
+                    <p class="text-gray-300">
+                        When I'm not coding, I enjoy exploring the latest research papers, contributing to open-source projects, and contemplating the future of human-AI collaboration.
+                    </p>
+                </div>
+                <div class="md:w-1/3 flex justify-center">
+                    <div class="w-64 h-64 rounded-full p-1 glow-btn">
+                        <img src="https://placehold.co/256x256/0a0133/00f6ff?text=MM" 
+                             onerror="this.onerror=null;this.src='https://placehold.co/256x256/0a0133/e0e0e0?text=Image+Error';"
+                             alt="Manthan Mittal" class="rounded-full w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="py-20">
+            <h2 class="text-4xl font-orbitron font-bold text-center mb-12 text-glow-secondary">Core Competencies</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Skill Card 1 -->
+                <div class="glass-card p-6 text-center scroll-animate" data-tilt>
+                    <div class="skill-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1" class="text-purple-400"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75a4.5 4.5 0 01-4.5 4.5H9.75a4.5 4.5 0 01-4.5-4.5m0 0a4.5 4.5 0 004.5 4.5h3a4.5 4.5 0 004.5-4.5m-9 4.5h3a4.5 4.5 0 014.5 4.5v.75a2.25 2.25 0 01-2.25 2.25H9.75a2.25 2.25 0 01-2.25-2.25v-.75a4.5 4.5 0 014.5-4.5z" /></svg>
+                    </div>
+                    <h3 class="text-xl font-orbitron font-bold mb-2">Artificial Intelligence</h3>
+                    <p class="text-gray-400">Developing core AI algorithms, search strategies, and knowledge representation systems.</p>
+                </div>
+                <!-- Skill Card 2 -->
+                <div class="glass-card p-6 text-center scroll-animate" style="transition-delay: 150ms;" data-tilt>
+                    <div class="skill-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1" class="text-purple-400"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c.251.023.501.05.75.082a.75.75 0 01.75.75v5.714a2.25 2.25 0 00.659 1.591L19 14.5M9.75 3.104l-2.25 2.25M19 14.5l-2.25 2.25m0 0l-2.25 2.25m2.25-2.25l2.25 2.25M5 14.5l-2.25 2.25m0 0l-2.25 2.25m2.25-2.25l2.25 2.25" /></svg>
+                    </div>
+                    <h3 class="text-xl font-orbitron font-bold mb-2">Deep Learning</h3>
+                    <p class="text-gray-400">Building and training complex neural networks using frameworks like TensorFlow and PyTorch.</p>
+                </div>
+                <!-- Skill Card 3 -->
+                <div class="glass-card p-6 text-center scroll-animate" style="transition-delay: 300ms;" data-tilt>
+                    <div class="skill-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1" class="text-purple-400"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639l4.43-8.94a.87.87 0 011.529-.028L9.88 9.12a2.25 2.25 0 01-2.036 2.036l-4.807.005z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12.036 12.322a1.012 1.012 0 010-.639l4.43-8.94a.87.87 0 011.529-.028L19.88 9.12a2.25 2.25 0 01-2.036 2.036l-4.807.005z" /><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12.322a1.012 1.012 0 010-.639l4.43-8.94a.87.87 0 011.529-.028l2.807 5.666a2.25 2.25 0 01-2.036 2.036l-4.807.005z" /></svg>
+                    </div>
+                    <h3 class="text-xl font-orbitron font-bold mb-2">Computer Vision</h3>
+                    <p class="text-gray-400">Implementing solutions for image recognition, object detection, and semantic segmentation.</p>
+                </div>
+                <!-- Skill Card 4 -->
+                <div class="glass-card p-6 text-center scroll-animate" style="transition-delay: 450ms;" data-tilt>
+                    <div class="skill-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1" class="text-purple-400"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z" /></svg>
+                    </div>
+                    <h3 class="text-xl font-orbitron font-bold mb-2">Neural Networks</h3>
+                    <p class="text-gray-400">Designing custom architectures like CNNs, RNNs, and Transformers for specific tasks.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="py-20">
+            <h2 class="text-4xl font-orbitron font-bold text-center mb-12 text-glow-secondary">Featured Projects</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Project Cards -->
+                <div class="glass-card overflow-hidden scroll-animate flex flex-col" data-tilt>
+                    <img src="https://placehold.co/600x400/0a0133/00f6ff?text=Sleep+Analysis" onerror="this.onerror=null;this.src='https://placehold.co/600x400/0a0133/e0e0e0?text=Image+Error';" alt="Sleep Pattern Analysis" class="w-full h-48 object-cover">
+                    <div class="p-6 flex flex-col flex-grow">
+                        <h3 class="text-xl font-orbitron font-bold mb-2">Sleep Pattern Analysis</h3>
+                        <p class="text-gray-400 mb-2 flex-grow">AI model analyzing sleep data to detect abnormalities and assist in diagnosing sleep disorders.</p>
+                        <p class="text-sm text-cyan-300 mb-4">Technologies: Python, Machine Learning, Data Analysis</p>
+                        <div class="mt-auto flex space-x-4">
+                            <a href="#" class="text-cyan-400 hover:text-cyan-300 font-semibold">GitHub &rarr;</a>
+                            <a href="#" class="text-cyan-400 hover:text-cyan-300 font-semibold">Demo &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card overflow-hidden scroll-animate flex flex-col" style="transition-delay: 150ms;" data-tilt>
+                    <img src="https://placehold.co/600x400/0a0133/7d2eff?text=MAC+Optimization" onerror="this.onerror=null;this.src='https://placehold.co/600x400/0a0133/e0e0e0?text=Image+Error';" alt="Random MAC Optimization" class="w-full h-48 object-cover">
+                    <div class="p-6 flex flex-col flex-grow">
+                        <h3 class="text-xl font-orbitron font-bold mb-2">Random MAC Optimization Using DNN & GNN</h3>
+                        <p class="text-gray-400 mb-2 flex-grow">Developed a Deep Neural Network (DNN) and Graph Neural Network (GNN) solution for optimizing random MAC allocation in networks.</p>
+                        <p class="text-sm text-purple-300 mb-4">Technologies: Python, PyTorch, GNN, Deep Learning</p>
+                        <div class="mt-auto flex space-x-4">
+                            <a href="#" class="text-cyan-400 hover:text-cyan-300 font-semibold">GitHub &rarr;</a>
+                            <a href="#" class="text-cyan-400 hover:text-cyan-300 font-semibold">Demo &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card overflow-hidden scroll-animate flex flex-col" style="transition-delay: 300ms;" data-tilt>
+                    <img src="https://placehold.co/600x400/0a0133/7d2eff?text=Roxigym" onerror="this.onerror=null;this.src='https://placehold.co/600x400/0a0133/e0e0e0?text=Image+Error';" alt="Roxigym" class="w-full h-48 object-cover">
+                    <div class="p-6 flex flex-col flex-grow">
+                        <h3 class="text-xl font-orbitron font-bold mb-2">Roxigym – AI-Powered Fitness App</h3>
+                        <p class="text-gray-400 mb-2 flex-grow">A full-stack fitness platform offering personalized workout routines, nutrition logging, and progress tracking.</p>
+                        <p class="text-sm text-purple-300 mb-4">Technologies: React, Node.js, MongoDB, AI Engine</p>
+                         <div class="mt-auto flex space-x-4">
+                            <a href="#" class="text-cyan-400 hover:text-cyan-300 font-semibold">GitHub &rarr;</a>
+                            <a href="#" class="text-cyan-400 hover:text-cyan-300 font-semibold">Demo &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card overflow-hidden scroll-animate flex flex-col" style="transition-delay: 450ms;" data-tilt>
+                    <img src="https://placehold.co/600x400/0a0133/00f6ff?text=Resume+Screener" onerror="this.onerror=null;this.src='https://placehold.co/600x400/0a0133/e0e0e0?text=Image+Error';" alt="AI-Powered Resume Screening System" class="w-full h-48 object-cover">
+                    <div class="p-6 flex flex-col flex-grow">
+                        <h3 class="text-xl font-orbitron font-bold mb-2">AI-Powered Resume Screening System</h3>
+                        <p class="text-gray-400 mb-2 flex-grow">An AI-driven system that automates the resume screening process using Natural Language Processing (NLP) and machine learning.</p>
+                        <p class="text-sm text-cyan-300 mb-4">Technologies: Python, NLP, Machine Learning, Flask</p>
+                         <div class="mt-auto flex space-x-4">
+                            <a href="#" class="text-cyan-400 hover:text-cyan-300 font-semibold">GitHub &rarr;</a>
+                            <a href="#" class="text-cyan-400 hover:text-cyan-300 font-semibold">Demo &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-20 scroll-animate">
+            <h2 class="text-4xl font-orbitron font-bold text-center mb-4 text-glow-secondary">Get In Touch</h2>
+            <p class="text-center text-gray-400 mb-12 max-w-xl mx-auto">I'm always open to discussing new projects, creative ideas, or opportunities to be part of an ambitious vision. Feel free to reach out.</p>
+            <div class="max-w-2xl mx-auto glass-card p-8">
+                <form id="contact-form">
+                    <div class="mb-6">
+                        <label for="name" class="block mb-2 text-sm font-medium text-gray-300">Your Name</label>
+                        <input type="text" id="name" class="bg-gray-900/50 border border-cyan-400/30 text-white text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" placeholder="John Doe" required>
+                    </div>
+                    <div class="mb-6">
+                        <label for="email" class="block mb-2 text-sm font-medium text-gray-300">Your Email</label>
+                        <input type="email" id="email" class="bg-gray-900/50 border border-cyan-400/30 text-white text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" placeholder="name@company.com" required>
+                    </div>
+                    <div class="mb-6">
+                        <label for="message" class="block mb-2 text-sm font-medium text-gray-300">Your Message</label>
+                        <textarea id="message" rows="4" class="bg-gray-900/50 border border-cyan-400/30 text-white text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" placeholder="Let's build something amazing..." required></textarea>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" id="submit-btn" class="px-8 py-3 rounded-lg text-white font-semibold glow-btn">
+                            Send Message
+                        </button>
+                    </div>
+                </form>
+                 <div id="form-message" class="text-center mt-4"></div>
+            </div>
+        </section>
+
+    </main>
+    
+    <!-- Footer -->
+    <footer class="py-8 border-t border-cyan-400/20">
+        <div class="container mx-auto px-6 text-center text-gray-500">
+            <p>&copy; 2024 Manthan Mittal. All Rights Reserved.</p>
+            <p>Designed with a futuristic vision.</p>
+        </div>
+    </footer>
+    
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.2/dist/vanilla-tilt.min.js"></script>
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script>
+        // --- Mobile Menu Toggle ---
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // --- Navbar background on scroll ---
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(10, 1, 51, 0.6)';
+            } else {
+                navbar.style.background = 'rgba(10, 1, 51, 0.3)';
+            }
+        });
+
+        // --- Smooth Scrolling ---
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                if (mobileMenu.classList.contains('hidden') === false) {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+
+        // --- Scroll Animations ---
+        const scrollElements = document.querySelectorAll('.scroll-animate');
+        const elementInView = (el, dividend = 1) => {
+            const elementTop = el.getBoundingClientRect().top;
+            return (
+                elementTop <= (window.innerHeight || document.documentElement.clientHeight) / dividend
+            );
+        };
+        const displayScrollElement = (element) => {
+            element.classList.add('visible');
+        };
+        const handleScrollAnimation = () => {
+            scrollElements.forEach((el) => {
+                if (elementInView(el, 1.25)) {
+                    displayScrollElement(el);
+                }
+            });
+        };
+        window.addEventListener('scroll', handleScrollAnimation);
+        handleScrollAnimation();
+
+        // --- Typing Effect ---
+        const typingTextElement = document.getElementById('typing-text');
+        const words = ["AI Engineer", "Innovator", "Deep Learning Specialist", "Problem Solver"];
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function type() {
+            const currentWord = words[wordIndex];
+            if (isDeleting) {
+                typingTextElement.textContent = currentWord.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typingTextElement.textContent = currentWord.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            if (!isDeleting && charIndex === currentWord.length) {
+                setTimeout(() => isDeleting = true, 2000);
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % words.length;
+            }
+
+            const typeSpeed = isDeleting ? 100 : 200;
+            setTimeout(type, typeSpeed);
+        }
+        document.addEventListener('DOMContentLoaded', type);
+        
+        // --- 3D Tilt Effect ---
+        VanillaTilt.init(document.querySelectorAll("[data-tilt]"), {
+            max: 15,
+            speed: 400,
+            glare: true,
+            "max-glare": 0.2
+        });
+        
+        // --- Firebase Configuration ---
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBNFJjL4ljhJ0Diu5xhz7MEjz13NXnJqIc",
+            authDomain: "manthan-mittal.firebaseapp.com",
+            projectId: "manthan-mittal",
+            storageBucket: "manthan-mittal.appspot.com",
+            messagingSenderId: "946724181631",
+            appId: "1:946724181631:web:f07694ce9dba7663bc114a",
+            measurementId: "G-PC28FBWG0L"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // --- Modified Contact Form Submission ---
+        const contactForm = document.getElementById('contact-form');
+        const formMessage = document.getElementById('form-message');
+        const submitBtn = document.getElementById('submit-btn');
+
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+
+            // Disable button and show sending status
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending...';
+            
+            // Add a new document with a generated id.
+            db.collection("contacts").add({
+                name: name,
+                email: email,
+                message: message,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then((docRef) => {
+                formMessage.textContent = "Thank you! Your message has been sent successfully.";
+                formMessage.style.color = 'var(--primary-glow)';
+                contactForm.reset();
+            })
+            .catch((error) => {
+                console.error("Error adding document: ", error);
+                formMessage.textContent = "Oops! Something went wrong. Please try again.";
+                formMessage.style.color = '#ef4444'; // Red color for error
+            })
+            .finally(() => {
+                // Re-enable the button
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Send Message';
+                // Clear the message after 5 seconds
+                setTimeout(() => {
+                    formMessage.textContent = "";
+                }, 5000);
+            });
+        });
+
+        // --- Enhanced three.js Particle Background ---
+        let scene, camera, renderer, particles, lines;
+        let positions, linePositions, lineColors;
+        const particleCount = 200;
+        const maxConnections = 20;
+        const connectionDistance = 100;
+
+        function init3D() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
+            camera.position.z = 500;
+
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            // Particles
+            const pMaterial = new THREE.PointsMaterial({
+                color: 0x00f6ff,
+                size: 3,
+                blending: THREE.AdditiveBlending,
+                transparent: true,
+                sizeAttenuation: true
+            });
+
+            const pGeometry = new THREE.BufferGeometry();
+            positions = new Float32Array(particleCount * 3);
+            const velocities = new Float32Array(particleCount * 3);
+
+            for (let i = 0; i < particleCount * 3; i++) {
+                positions[i] = (Math.random() - 0.5) * 1000;
+                velocities[i] = (Math.random() - 0.5) * 0.5;
+            }
+            pGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3).setUsage(THREE.DynamicDrawUsage));
+            pGeometry.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3));
+            particles = new THREE.Points(pGeometry, pMaterial);
+            scene.add(particles);
+
+            // Lines
+            const lGeometry = new THREE.BufferGeometry();
+            linePositions = new Float32Array(particleCount * particleCount * 3);
+            lineColors = new Float32Array(particleCount * particleCount * 3);
+            lGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions, 3).setUsage(THREE.DynamicDrawUsage));
+            lGeometry.setAttribute('color', new THREE.BufferAttribute(lineColors, 3).setUsage(THREE.DynamicDrawUsage));
+            
+            const lMaterial = new THREE.LineBasicMaterial({
+                vertexColors: true,
+                blending: THREE.AdditiveBlending,
+                transparent: true
+            });
+            lines = new THREE.LineSegments(lGeometry, lMaterial);
+            scene.add(lines);
+
+            animate();
+        }
+
+        let mouseX = 0, mouseY = 0;
+        document.addEventListener('mousemove', (event) => {
+            mouseX = event.clientX - window.innerWidth / 2;
+            mouseY = event.clientY - window.innerHeight / 2;
+        });
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            let vertexpos = 0;
+            let colorpos = 0;
+            let numConnected = 0;
+
+            for (let i = 0; i < particleCount; i++) {
+                // Update particle positions
+                positions[i * 3] += particles.geometry.attributes.velocity.array[i * 3];
+                positions[i * 3 + 1] += particles.geometry.attributes.velocity.array[i * 3 + 1];
+                positions[i * 3 + 2] += particles.geometry.attributes.velocity.array[i * 3 + 2];
+
+                if (positions[i * 3 + 1] < -500 || positions[i * 3 + 1] > 500)
+                    particles.geometry.attributes.velocity.array[i * 3 + 1] *= -1;
+                if (positions[i * 3] < -500 || positions[i * 3] > 500)
+                    particles.geometry.attributes.velocity.array[i * 3] *= -1;
+                if (positions[i * 3 + 2] < -500 || positions[i * 3 + 2] > 500)
+                    particles.geometry.attributes.velocity.array[i * 3 + 2] *= -1;
+                
+                // Check connections
+                for (let j = i + 1; j < particleCount; j++) {
+                    const dx = positions[i * 3] - positions[j * 3];
+                    const dy = positions[i * 3 + 1] - positions[j * 3 + 1];
+                    const dz = positions[i * 3 + 2] - positions[j * 3 + 2];
+                    const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+                    if (dist < connectionDistance) {
+                        const alpha = 1.0 - dist / connectionDistance;
+                        linePositions[vertexpos++] = positions[i * 3];
+                        linePositions[vertexpos++] = positions[i * 3 + 1];
+                        linePositions[vertexpos++] = positions[i * 3 + 2];
+                        linePositions[vertexpos++] = positions[j * 3];
+                        linePositions[vertexpos++] = positions[j * 3 + 1];
+                        linePositions[vertexpos++] = positions[j * 3 + 2];
+
+                        lineColors[colorpos++] = alpha;
+                        lineColors[colorpos++] = alpha;
+                        lineColors[colorpos++] = 1; // Blue tint
+                        lineColors[colorpos++] = alpha;
+                        lineColors[colorpos++] = alpha;
+                        lineColors[colorpos++] = 1; // Blue tint
+
+                        numConnected++;
+                    }
+                }
+            }
+            
+            lines.geometry.setDrawRange(0, numConnected * 2);
+            lines.geometry.attributes.position.needsUpdate = true;
+            lines.geometry.attributes.color.needsUpdate = true;
+            particles.geometry.attributes.position.needsUpdate = true;
+
+            camera.position.x += (mouseX - camera.position.x) * 0.01;
+            camera.position.y += (-mouseY - camera.position.y) * 0.01;
+            camera.lookAt(scene.position);
+
+            renderer.render(scene, camera);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        window.addEventListener('resize', onWindowResize, false);
+
+        init3D();
+    </script>
+
+</body>
+</html>
