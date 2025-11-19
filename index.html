@@ -1,533 +1,593 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manthan Mittal - AI Engineer</title>
-    
-    <!-- Tailwind CSS for styling -->
+    <title>Manthan Mittal | AI Engineer</title>
+    <meta name="description" content="Portfolio of Manthan Mittal - AI Engineer specializing in Deep Learning and Computer Vision">
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts: Inter for body, Orbitron for headings -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
-    
-    <!-- Custom CSS for futuristic theme and animations -->
-    <style>
-        :root {
-            --primary-glow: #00f6ff;
-            --secondary-glow: #7d2eff;
-            --bg-dark: #02001a;
-            --bg-light: #0a0133;
-        }
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
 
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Tailwind Config for 2025 Theme -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'electric-blue': '#3b82f6',
+                        'vibrant-violet': '#8b5cf6',
+                        'cyan-glow': '#06b6d4',
+                        'deep-navy': '#020617', /* Dark Navy Background */
+                        'glass-bg': 'rgba(2, 6, 23, 0.7)',
+                    },
+                    fontFamily: {
+                        'orbitron': ['Orbitron', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace'],
+                        'rajdhani': ['Rajdhani', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* --- Global Reset & Base --- */
         body {
-            background-color: var(--bg-dark);
-            color: #e0e0e0;
-            font-family: 'Inter', sans-serif;
+            background-color: #020617; /* Deep Navy */
+            color: #e2e8f0;
+            cursor: none;
             overflow-x: hidden;
         }
-        
-        /* Custom font for headings */
-        .font-orbitron {
-            font-family: 'Orbitron', sans-serif;
+
+        /* --- Custom Cursor --- */
+        #cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #3b82f6; /* Electric Blue */
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s;
+            mix-blend-mode: screen;
+        }
+        #cursor.hovered {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(59, 130, 246, 0.2);
+            border-color: #8b5cf6; /* Violet on hover */
+        }
+        #cursor-dot {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 4px;
+            background-color: #fff;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%);
         }
 
-        /* Canvas for 3D background */
-        #bg-canvas {
+        /* --- 3D Canvas --- */
+        #canvas-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: -1;
+        }
+
+        /* --- 2025 Glassmorphism --- */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6); /* Slate-900 with opacity */
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        /* Gradient Border Effect */
+        .glass-panel::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(45deg, transparent 40%, rgba(59, 130, 246, 0.5), transparent 60%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
             opacity: 0.5;
         }
 
-        /* Neon text effect */
-        .text-glow {
-            text-shadow: 0 0 5px var(--primary-glow), 0 0 10px var(--primary-glow), 0 0 20px var(--primary-glow), 0 0 40px var(--secondary-glow);
-        }
-        
-        .text-glow-secondary {
-            text-shadow: 0 0 5px var(--secondary-glow), 0 0 10px var(--secondary-glow);
+        .glass-panel:hover {
+            border-color: rgba(59, 130, 246, 0.6);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(59, 130, 246, 0.15);
         }
 
-        /* Glassmorphism effect for cards */
-        .glass-card {
-            background: rgba(10, 1, 51, 0.3);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(0, 246, 255, 0.2);
-            transition: all 0.3s ease;
-            transform-style: preserve-3d;
-        }
-
-        .glass-card:hover {
-            border-color: rgba(0, 246, 255, 0.6);
-            box-shadow: 0 0 25px rgba(0, 246, 255, 0.3);
-            transform: translateY(-5px) scale(1.02);
+        /* --- Typography Effects --- */
+        .text-gradient {
+            background: linear-gradient(135deg, #ffffff 0%, #93c5fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
-        /* Custom scrollbar */
+        .text-gradient-accent {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- Scroll Bar --- */
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-dark); }
-        ::-webkit-scrollbar-thumb { background: var(--primary-glow); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--secondary-glow); }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
 
-        /* Animation for elements on scroll */
-        .scroll-animate {
+        /* --- Utilities --- */
+        .reveal {
             opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
         }
-
-        .scroll-animate.visible {
+        .reveal.active {
             opacity: 1;
             transform: translateY(0);
         }
-        
-        /* Glowing button style */
-        .glow-btn {
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-            transition: color 0.3s;
-        }
-        .glow-btn:disabled {
-            cursor: not-allowed;
-            color: #6b7280;
-        }
-        .glow-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 300%;
-            height: 300%;
-            background: conic-gradient(transparent, var(--primary-glow), transparent 30%);
-            transform: translate(-50%, -50%);
-            animation: rotate 4s linear infinite;
-            z-index: -2;
-        }
-        .glow-btn::after {
-            content: '';
-            position: absolute;
-            top: 1px;
-            left: 1px;
-            right: 1px;
-            bottom: 1px;
-            background: var(--bg-light);
-            border-radius: 0.5rem;
-            z-index: -1;
-        }
-        
-        @keyframes rotate {
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
-        }
 
-        /* Typing cursor effect */
-        .typing-cursor {
-            display: inline-block;
-            width: 3px;
-            height: 1.8rem;
-            background-color: var(--primary-glow);
-            animation: blink 0.8s infinite;
-            margin-left: 5px;
-            box-shadow: 0 0 5px var(--primary-glow);
+        .code-block {
+            background: #0f172a;
+            border-left: 3px solid #3b82f6;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 1.5rem;
+            color: #94a3b8;
         }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-        
-        /* Animated SVG Icons */
-        .skill-icon {
-            width: 64px;
-            height: 64px;
-            margin: 0 auto 1rem;
-            filter: drop-shadow(0 0 5px var(--secondary-glow));
-            animation: pulse 3s infinite ease-in-out;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.05); opacity: 1; }
-        }
-
-        /* Styles for the project detail view */
-        #project-detail-container {
-            transition: opacity 0.5s ease-in-out;
-        }
+        .keyword { color: #c084fc; } /* Violet */
+        .string { color: #67e8f9; } /* Cyan */
+        .func { color: #60a5fa; } /* Blue */
     </style>
 </head>
-<body class="antialiased">
+<body class="antialiased selection:bg-electric-blue selection:text-white">
 
-    <canvas id="bg-canvas"></canvas>
+    <!-- Custom Cursor Elements -->
+    <div id="cursor"></div>
+    <div id="cursor-dot"></div>
 
-    <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 glass-card" id="navbar">
+    <!-- 3D Background -->
+    <div id="canvas-container"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 transition-all duration-300 border-b border-white/5 bg-deep-navy/80 backdrop-blur-md" id="navbar">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="text-2xl font-orbitron font-bold text-white text-glow">MM</a>
-            <nav class="hidden md:flex space-x-8">
-                <a href="#about" class="text-gray-300 hover:text-white hover:text-glow-secondary transition-all duration-300">About</a>
-                <a href="#skills" class="text-gray-300 hover:text-white hover:text-glow-secondary transition-all duration-300">Skills</a>
-                <a href="#projects" class="text-gray-300 hover:text-white hover:text-glow-secondary transition-all duration-300">Projects</a>
-                <a href="#contact" class="text-gray-300 hover:text-white hover:text-glow-secondary transition-all duration-300">Contact</a>
-            </nav>
-            <button id="mobile-menu-btn" class="md:hidden text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-                </svg>
+            <a href="#" class="text-2xl font-orbitron font-bold text-white tracking-widest hoverable">
+                MM<span class="text-electric-blue">.AI</span>
+            </a>
+            
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex space-x-8 font-rajdhani font-bold tracking-wide text-lg">
+                <a href="#about" class="hoverable hover:text-electric-blue transition-colors relative group">
+                    About
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-electric-blue transition-all group-hover:w-full"></span>
+                </a>
+                <a href="#skills" class="hoverable hover:text-electric-blue transition-colors relative group">
+                    Skills
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-electric-blue transition-all group-hover:w-full"></span>
+                </a>
+                <a href="#projects" class="hoverable hover:text-electric-blue transition-colors relative group">
+                    Projects
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-electric-blue transition-all group-hover:w-full"></span>
+                </a>
+                <a href="#contact" class="hoverable hover:text-electric-blue transition-colors relative group">
+                    Contact
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-electric-blue transition-all group-hover:w-full"></span>
+                </a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="md:hidden text-white hoverable">
+                <i data-lucide="menu"></i>
             </button>
         </div>
-        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
-            <a href="#about" class="block py-2 text-gray-300 hover:text-white">About</a>
-            <a href="#skills" class="block py-2 text-gray-300 hover:text-white">Skills</a>
-            <a href="#projects" class="block py-2 text-gray-300 hover:text-white">Projects</a>
-            <a href="#contact" class="block py-2 text-gray-300 hover:text-white">Contact</a>
-        </div>
-    </header>
-
-    <!-- Main content container that will be hidden when a project is viewed -->
-    <div id="main-content">
-        <main class="container mx-auto px-6">
-            <section id="hero" class="min-h-screen flex items-center justify-center text-center">
-                <div class="z-10">
-                    <h1 class="text-5xl md:text-7xl lg:text-8xl font-orbitron font-extrabold text-white text-glow mb-4">Manthan Mittal</h1>
-                    <p class="text-xl md:text-2xl lg:text-3xl text-gray-300 h-12">
-                        <span id="typing-text" class="text-glow-secondary"></span><span class="typing-cursor"></span>
-                    </p>
-                    <p class="max-w-2xl mx-auto mt-6 text-gray-400">Crafting intelligent systems that learn, adapt, and shape the future. Specializing in Deep Learning, Computer Vision, and Neural Networks.</p>
-                    <a href="#projects" class="mt-8 inline-block px-8 py-3 rounded-lg text-white font-semibold glow-btn">View My Work</a>
-                </div>
-            </section>
-
-            <section id="about" class="py-20 scroll-animate">
-                <h2 class="text-4xl font-orbitron font-bold text-center mb-12 text-glow-secondary">About Me</h2>
-                <div class="flex flex-col md:flex-row items-center gap-12">
-                    <div class="md:w-2/3">
-                        <p class="text-lg mb-4 text-gray-300">Hello! I'm Manthan Mittal, an AI Engineer with a passion for building intelligent solutions to complex problems. My journey into the world of artificial intelligence began with a fascination for how machines can perceive and understand the world around them.</p>
-                        <p class="mb-4 text-gray-300">With a strong foundation in computer science and mathematics, I specialize in developing and deploying machine learning models, particularly in the realms of computer vision and natural language processing. I thrive on pushing the boundaries of what's possible.</p>
-                        <p class="text-gray-300">When I'm not coding, I enjoy exploring the latest research papers, contributing to open-source projects, and contemplating the future of human-AI collaboration.</p>
-                    </div>
-                    <div class="md:w-1/3 flex justify-center">
-                        <div class="w-64 h-64 rounded-full p-1 glow-btn">
-                            <img src="https://placehold.co/256x256/0a0133/00f6ff?text=MM" onerror="this.onerror=null;this.src='https://placehold.co/256x256/0a0133/e0e0e0?text=Image+Error';" alt="Manthan Mittal" class="rounded-full w-full h-full object-cover">
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="skills" class="py-20">
-                <h2 class="text-4xl font-orbitron font-bold text-center mb-12 text-glow-secondary">Core Competencies</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    <div class="glass-card p-6 text-center scroll-animate" data-tilt>
-                        <div class="skill-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1" class="text-purple-400"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75a4.5 4.5 0 01-4.5 4.5H9.75a4.5 4.5 0 01-4.5-4.5m0 0a4.5 4.5 0 004.5 4.5h3a4.5 4.5 0 004.5-4.5m-9 4.5h3a4.5 4.5 0 014.5 4.5v.75a2.25 2.25 0 01-2.25 2.25H9.75a2.25 2.25 0 01-2.25-2.25v-.75a4.5 4.5 0 014.5-4.5z" /></svg></div>
-                        <h3 class="text-xl font-orbitron font-bold mb-2">Artificial Intelligence</h3>
-                        <p class="text-gray-400">Developing core AI algorithms, search strategies, and knowledge representation.</p>
-                    </div>
-                    <div class="glass-card p-6 text-center scroll-animate" style="transition-delay: 150ms;" data-tilt>
-                        <div class="skill-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1" class="text-purple-400"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c.251.023.501.05.75.082a.75.75 0 01.75.75v5.714a2.25 2.25 0 00.659 1.591L19 14.5M9.75 3.104l-2.25 2.25M19 14.5l-2.25 2.25m0 0l-2.25 2.25m2.25-2.25l2.25 2.25M5 14.5l-2.25 2.25m0 0l-2.25 2.25m2.25-2.25l2.25 2.25" /></svg></div>
-                        <h3 class="text-xl font-orbitron font-bold mb-2">Deep Learning</h3>
-                        <p class="text-gray-400">Building neural networks with TensorFlow and PyTorch.</p>
-                    </div>
-                    <div class="glass-card p-6 text-center scroll-animate" style="transition-delay: 300ms;" data-tilt>
-                        <div class="skill-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1" class="text-purple-400"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639l4.43-8.94a.87.87 0 011.529-.028L9.88 9.12a2.25 2.25 0 01-2.036 2.036l-4.807.005z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12.036 12.322a1.012 1.012 0 010-.639l4.43-8.94a.87.87 0 011.529-.028L19.88 9.12a2.25 2.25 0 01-2.036 2.036l-4.807.005z" /><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12.322a1.012 1.012 0 010-.639l4.43-8.94a.87.87 0 011.529-.028l2.807 5.666a2.25 2.25 0 01-2.036 2.036l-4.807.005z" /></svg></div>
-                        <h3 class="text-xl font-orbitron font-bold mb-2">Computer Vision</h3>
-                        <p class="text-gray-400">Solutions for image recognition, object detection, and segmentation.</p>
-                    </div>
-                    <div class="glass-card p-6 text-center scroll-animate" style="transition-delay: 450ms;" data-tilt>
-                        <div class="skill-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1" class="text-purple-400"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z" /></svg></div>
-                        <h3 class="text-xl font-orbitron font-bold mb-2">Neural Networks</h3>
-                        <p class="text-gray-400">Designing custom architectures like CNNs, RNNs, and Transformers.</p>
-                    </div>
-                </div>
-            </section>
-
-            <section id="projects" class="py-20">
-                <h2 class="text-4xl font-orbitron font-bold text-center mb-12 text-glow-secondary">Featured Projects</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="glass-card overflow-hidden scroll-animate flex flex-col" data-tilt>
-                        <img src="https://placehold.co/600x400/0a0133/00f6ff?text=Sleep+Analysis" onerror="this.onerror=null;this.src='https://placehold.co/600x400/0a0133/e0e0e0?text=Image+Error';" alt="Sleep Pattern Analysis" class="w-full h-48 object-cover">
-                        <div class="p-6 flex flex-col flex-grow">
-                            <h3 class="text-xl font-orbitron font-bold mb-2">Sleep Pattern Analysis</h3>
-                            <p class="text-gray-400 mb-2 flex-grow">AI model analyzing sleep data to detect abnormalities and assist in diagnosing sleep disorders.</p>
-                            <p class="text-sm text-cyan-300 mb-4">Technologies: Python, Machine Learning, Data Analysis</p>
-                            <div class="mt-auto flex space-x-4">
-                                <a href="#" target="_blank" class="text-cyan-400 hover:text-cyan-300 font-semibold">GitHub &rarr;</a>
-                                <a href="#" target="_blank" class="text-cyan-400 hover:text-cyan-300 font-semibold">Demo &rarr;</a>
-                                <a href="javascript:void(0);" data-project="#sleep-analysis-template" class="text-green-400 hover:text-green-300 font-semibold project-link">Learn More &rarr;</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="glass-card overflow-hidden scroll-animate flex flex-col" style="transition-delay: 150ms;" data-tilt>
-                        <img src="https://placehold.co/600x400/0a0133/7d2eff?text=MAC+Optimization" onerror="this.onerror=null;this.src='https://placehold.co/600x400/0a0133/e0e0e0?text=Image+Error';" alt="Random MAC Optimization" class="w-full h-48 object-cover">
-                        <div class="p-6 flex flex-col flex-grow">
-                            <h3 class="text-xl font-orbitron font-bold mb-2">Random MAC Optimization Using DNN & GNN</h3>
-                            <p class="text-gray-400 mb-2 flex-grow">A Deep/Graph Neural Network solution for optimizing random MAC allocation in networks.</p>
-                            <p class="text-sm text-purple-300 mb-4">Technologies: Python, PyTorch, GNN, Deep Learning</p>
-                            <div class="mt-auto flex space-x-4">
-                                <a href="#" target="_blank" class="text-cyan-400 hover:text-cyan-300 font-semibold">GitHub &rarr;</a>
-                                <a href="#" target="_blank" class="text-cyan-400 hover:text-cyan-300 font-semibold">Demo &rarr;</a>
-                                <a href="javascript:void(0);" data-project="#mac-optimization-template" class="text-green-400 hover:text-green-300 font-semibold project-link">Learn More &rarr;</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="glass-card overflow-hidden scroll-animate flex flex-col" style="transition-delay: 300ms;" data-tilt>
-                        <img src="https://placehold.co/600x400/0a0133/7d2eff?text=Roxigym" onerror="this.onerror=null;this.src='https://placehold.co/600x400/0a0133/e0e0e0?text=Image+Error';" alt="Roxigym" class="w-full h-48 object-cover">
-                        <div class="p-6 flex flex-col flex-grow">
-                            <h3 class="text-xl font-orbitron font-bold mb-2">Roxigym – AI-Powered Fitness App</h3>
-                            <p class="text-gray-400 mb-2 flex-grow">A full-stack fitness platform offering personalized workout routines, nutrition logging, and progress tracking.</p>
-                            <p class="text-sm text-purple-300 mb-4">Technologies: React, Node.js, MongoDB, AI Engine</p>
-                            <div class="mt-auto flex space-x-4">
-                                <a href="#" target="_blank" class="text-cyan-400 hover:text-cyan-300 font-semibold">GitHub &rarr;</a>
-                                <a href="#" target="_blank" class="text-cyan-400 hover:text-cyan-300 font-semibold">Demo &rarr;</a>
-                                <a href="javascript:void(0);" data-project="#roxigym-template" class="text-green-400 hover:text-green-300 font-semibold project-link">Learn More &rarr;</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="glass-card overflow-hidden scroll-animate flex flex-col" style="transition-delay: 450ms;" data-tilt>
-                        <img src="https://placehold.co/600x400/0a0133/00f6ff?text=Resume+Screener" onerror="this.onerror=null;this.src='https://placehold.co/600x400/0a0133/e0e0e0?text=Image+Error';" alt="AI-Powered Resume Screening System" class="w-full h-48 object-cover">
-                        <div class="p-6 flex flex-col flex-grow">
-                            <h3 class="text-xl font-orbitron font-bold mb-2">AI-Powered Resume Screening System</h3>
-                            <p class="text-gray-400 mb-2 flex-grow">An AI-driven system that automates the resume screening process using NLP and machine learning.</p>
-                            <p class="text-sm text-cyan-300 mb-4">Technologies: Python, NLP, Machine Learning, Flask</p>
-                            <div class="mt-auto flex space-x-4">
-                                <a href="#" target="_blank" class="text-cyan-400 hover:text-cyan-300 font-semibold">GitHub &rarr;</a>
-                                <a href="#" target="_blank" class="text-cyan-400 hover:text-cyan-300 font-semibold">Demo &rarr;</a>
-                                <a href="javascript:void(0);" data-project="#resume-screener-template" class="text-green-400 hover:text-green-300 font-semibold project-link">Learn More &rarr;</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="contact" class="py-20 scroll-animate">
-                <h2 class="text-4xl font-orbitron font-bold text-center mb-4 text-glow-secondary">Get In Touch</h2>
-                <p class="text-center text-gray-400 mb-12 max-w-xl mx-auto">I'm always open to discussing new projects, creative ideas, or opportunities to be part of an ambitious vision. Feel free to reach out.</p>
-                <div class="max-w-2xl mx-auto glass-card p-8">
-                    <form id="contact-form">
-                        <div class="mb-6">
-                            <label for="name" class="block mb-2 text-sm font-medium text-gray-300">Your Name</label>
-                            <input type="text" id="name" class="bg-gray-900/50 border border-cyan-400/30 text-white text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" placeholder="John Doe" required>
-                        </div>
-                        <div class="mb-6">
-                            <label for="email" class="block mb-2 text-sm font-medium text-gray-300">Your Email</label>
-                            <input type="email" id="email" class="bg-gray-900/50 border border-cyan-400/30 text-white text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" placeholder="name@company.com" required>
-                        </div>
-                        <div class="mb-6">
-                            <label for="message" class="block mb-2 text-sm font-medium text-gray-300">Your Message</label>
-                            <textarea id="message" rows="4" class="bg-gray-900/50 border border-cyan-400/30 text-white text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" placeholder="Let's build something amazing..." required></textarea>
-                        </div>
-                        <div class="text-center">
-                            <button type="submit" id="submit-btn" class="px-8 py-3 rounded-lg text-white font-semibold glow-btn">Send Message</button>
-                        </div>
-                    </form>
-                    <div id="form-message" class="text-center mt-4"></div>
-                </div>
-            </section>
-        </main>
         
-        <footer class="py-8 border-t border-cyan-400/20">
-            <div class="container mx-auto px-6 text-center text-gray-500">
-                <p>&copy; 2024 Manthan Mittal. All Rights Reserved.</p>
-                <p>Designed with a futuristic vision.</p>
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-deep-navy/95 border-b border-electric-blue/30 backdrop-blur-xl absolute w-full">
+            <div class="px-6 py-4 flex flex-col space-y-4 font-rajdhani font-bold text-xl">
+                <a href="#about" class="text-gray-300 hover:text-electric-blue">About</a>
+                <a href="#skills" class="text-gray-300 hover:text-electric-blue">Skills</a>
+                <a href="#projects" class="text-gray-300 hover:text-electric-blue">Projects</a>
+                <a href="#contact" class="text-gray-300 hover:text-electric-blue">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Wrapper -->
+    <div id="main-view">
+        
+        <!-- Hero Section -->
+        <header class="min-h-screen flex items-center justify-center relative overflow-hidden">
+            <div class="container mx-auto px-6 relative z-10 grid md:grid-cols-2 gap-12 items-center">
+                <div class="text-left reveal active">
+                    <div class="inline-flex items-center space-x-2 mb-6 px-3 py-1 rounded-full bg-electric-blue/10 border border-electric-blue/30">
+                        <span class="relative flex h-2 w-2">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-electric-blue opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-2 w-2 bg-electric-blue"></span>
+                        </span>
+                        <span class="text-electric-blue font-mono text-xs tracking-widest">SYSTEM OPERATIONAL</span>
+                    </div>
+                    
+                    <h1 class="text-5xl md:text-7xl lg:text-8xl font-orbitron font-black tracking-tighter mb-2">
+                        MANTHAN
+                    </h1>
+                    <h1 class="text-5xl md:text-7xl lg:text-8xl font-orbitron font-black text-gradient-accent tracking-tighter mb-6">
+                        MITTAL
+                    </h1>
+
+                    <div class="h-12 flex items-center">
+                        <span class="text-vibrant-violet font-bold text-2xl mr-3">_</span> 
+                        <p class="text-xl md:text-2xl font-rajdhani text-gray-300">
+                            <span id="typing-text"></span><span class="animate-pulse">|</span>
+                        </p>
+                    </div>
+
+                    <p class="max-w-lg text-gray-400 mt-6 font-sans leading-relaxed text-lg">
+                        Architecting the next generation of intelligent systems. Specializing in <span class="text-white">Neural Networks</span> and <span class="text-white">Generative AI</span>.
+                    </p>
+
+                    <div class="mt-10 flex space-x-4">
+                        <a href="#projects" class="hoverable group relative px-8 py-3 bg-electric-blue text-white font-orbitron font-bold uppercase tracking-wider rounded-sm overflow-hidden transition-all hover:shadow-[0_0_20px_rgba(59,130,246,0.5)]">
+                            View Work
+                        </a>
+                        <a href="#contact" class="hoverable px-8 py-3 bg-transparent border border-gray-700 text-gray-300 font-orbitron font-bold uppercase tracking-wider rounded-sm transition-all hover:border-white hover:text-white">
+                            Contact Me
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 3D Stats Card -->
+                <div class="hidden md:block reveal delay-200">
+                    <div class="glass-panel p-8 rounded-2xl animate-float max-w-sm ml-auto border-t border-electric-blue/40">
+                        <div class="flex justify-between items-center mb-6">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-electric-blue/20 flex items-center justify-center">
+                                    <i data-lucide="cpu" class="text-electric-blue"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-gray-400 font-mono">MODEL STATUS</div>
+                                    <div class="text-sm font-bold text-white">Training Active</div>
+                                </div>
+                            </div>
+                            <i data-lucide="bar-chart-2" class="text-vibrant-violet"></i>
+                        </div>
+                        
+                        <div class="space-y-5 font-mono text-xs">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-gray-400">Epochs</span>
+                                    <span class="text-electric-blue">10,540</span>
+                                </div>
+                                <div class="w-full bg-gray-800 h-1.5 rounded-full overflow-hidden">
+                                    <div class="bg-electric-blue h-full w-[75%]"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-gray-400">Accuracy</span>
+                                    <span class="text-vibrant-violet">99.4%</span>
+                                </div>
+                                <div class="w-full bg-gray-800 h-1.5 rounded-full overflow-hidden">
+                                    <div class="bg-vibrant-violet h-full w-[99%]"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 pt-6 border-t border-white/5">
+                            <div class="flex justify-between text-gray-500 text-xs">
+                                <span>Latency</span>
+                                <span>12ms</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- About Section -->
+        <section id="about" class="py-24 relative">
+            <div class="container mx-auto px-6">
+                <div class="flex flex-col md:flex-row gap-16 items-center">
+                    <div class="md:w-1/3 flex justify-center reveal relative">
+                        <!-- Simplified Profile Image for 2025 Look -->
+                        <div class="relative w-72 h-72 group">
+                            <div class="absolute inset-0 bg-gradient-to-br from-electric-blue to-vibrant-violet rounded-2xl blur opacity-40 group-hover:opacity-60 transition-opacity duration-500"></div>
+                            <div class="relative w-full h-full rounded-2xl overflow-hidden border border-white/10 bg-deep-navy hoverable">
+                                <img src="https://placehold.co/400x400/020617/3b82f6?text=MM" alt="Manthan Mittal" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="md:w-2/3 reveal">
+                        <h2 class="text-3xl md:text-4xl font-orbitron font-bold mb-8 flex items-center">
+                            <span class="text-electric-blue mr-3">//</span> About_Me
+                        </h2>
+                        
+                        <div class="code-block rounded-xl hoverable shadow-2xl">
+                            <p class="mb-2"><span class="keyword">class</span> <span class="text-white font-bold">Engineer</span> <span class="keyword">extends</span> <span class="text-white font-bold">Human</span> {</p>
+                            <p class="pl-4 mb-1"><span class="keyword">constructor</span>() {</p>
+                            <p class="pl-8 mb-1"><span class="keyword">this</span>.name = <span class="string">"Manthan Mittal"</span>;</p>
+                            <p class="pl-8 mb-1"><span class="keyword">this</span>.focus = <span class="string">"Computer Vision & NLP"</span>;</p>
+                            <p class="pl-8 mb-1"><span class="keyword">this</span>.mission = <span class="string">"Solving complexity through code"</span>;</p>
+                            <p class="pl-4 mb-2">}</p>
+                            <p class="pl-4 mb-1"><span class="func">innovate</span>() {</p>
+                            <p class="pl-8 text-gray-400">// Transforming theoretical concepts into deployment-ready AI models.</p>
+                            <p class="pl-8"><span class="keyword">return</span> <span class="keyword">new</span> <span class="text-white">Future</span>();</p>
+                            <p class="pl-4">}</p>
+                            <p>}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="py-24 bg-slate-900/30">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl md:text-4xl font-orbitron font-bold mb-16 text-center reveal">
+                    Core_Competencies
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="glass-panel p-8 rounded-xl hoverable group reveal hover:bg-electric-blue/5 transition-colors">
+                        <i data-lucide="brain" class="text-electric-blue w-10 h-10 mb-6"></i>
+                        <h3 class="text-xl font-rajdhani font-bold text-white mb-2">Artificial Intelligence</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed">Developing robust AI algorithms, search strategies, and advanced knowledge representation systems.</p>
+                    </div>
+
+                    <div class="glass-panel p-8 rounded-xl hoverable group reveal delay-100 hover:bg-vibrant-violet/5 transition-colors">
+                        <i data-lucide="network" class="text-vibrant-violet w-10 h-10 mb-6"></i>
+                        <h3 class="text-xl font-rajdhani font-bold text-white mb-2">Deep Learning</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed">Architecting neural networks using PyTorch & TensorFlow for complex pattern recognition.</p>
+                    </div>
+
+                    <div class="glass-panel p-8 rounded-xl hoverable group reveal delay-200 hover:bg-cyan-glow/5 transition-colors">
+                        <i data-lucide="scan-face" class="text-cyan-glow w-10 h-10 mb-6"></i>
+                        <h3 class="text-xl font-rajdhani font-bold text-white mb-2">Computer Vision</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed">Real-time object detection, image segmentation, and facial recognition systems.</p>
+                    </div>
+
+                    <div class="glass-panel p-8 rounded-xl hoverable group reveal delay-300 hover:bg-white/5 transition-colors">
+                        <i data-lucide="code-2" class="text-white w-10 h-10 mb-6"></i>
+                        <h3 class="text-xl font-rajdhani font-bold text-white mb-2">Neural Engineering</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed">Optimizing model performance, reducing latency, and deploying scalable AI solutions.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="py-24 relative overflow-hidden">
+             <!-- Background Glow -->
+             <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent via-electric-blue/5 to-transparent pointer-events-none"></div>
+
+            <div class="container mx-auto px-6 relative z-10">
+                <div class="flex justify-between items-end mb-16 reveal">
+                    <h2 class="text-3xl md:text-4xl font-orbitron font-bold">
+                        Selected_Projects
+                    </h2>
+                    <span class="hidden md:block text-electric-blue font-mono text-sm">Displaying 1-4 of 12</span>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Project 1 -->
+                    <div class="group relative h-80 rounded-2xl overflow-hidden cursor-none reveal">
+                        <img src="https://placehold.co/800x600/0f172a/3b82f6?text=Sleep+Analysis+Data" alt="Sleep Analysis" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 group-hover:opacity-40 opacity-60">
+                        <div class="absolute inset-0 bg-gradient-to-t from-deep-navy via-transparent to-transparent"></div>
+                        
+                        <div class="absolute bottom-0 left-0 p-8 w-full">
+                            <div class="flex justify-between items-end">
+                                <div>
+                                    <h3 class="text-2xl font-bold text-white mb-2 font-orbitron">Sleep Analysis AI</h3>
+                                    <p class="text-gray-300 text-sm max-w-xs">Diagnostics using LSTM networks on EEG data.</p>
+                                </div>
+                                <button data-project="sleep" class="project-trigger w-12 h-12 rounded-full bg-electric-blue flex items-center justify-center text-white transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white hover:text-black">
+                                    <i data-lucide="arrow-up-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 2 -->
+                    <div class="group relative h-80 rounded-2xl overflow-hidden cursor-none reveal delay-100">
+                        <img src="https://placehold.co/800x600/0f172a/8b5cf6?text=Network+Graph" alt="GNN" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 group-hover:opacity-40 opacity-60">
+                        <div class="absolute inset-0 bg-gradient-to-t from-deep-navy via-transparent to-transparent"></div>
+                        
+                        <div class="absolute bottom-0 left-0 p-8 w-full">
+                            <div class="flex justify-between items-end">
+                                <div>
+                                    <h3 class="text-2xl font-bold text-white mb-2 font-orbitron">MAC Optimization</h3>
+                                    <p class="text-gray-300 text-sm max-w-xs">Hybrid GNN architecture for network protocol efficiency.</p>
+                                </div>
+                                <button data-project="mac" class="project-trigger w-12 h-12 rounded-full bg-vibrant-violet flex items-center justify-center text-white transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white hover:text-black">
+                                    <i data-lucide="arrow-up-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 3 -->
+                    <div class="group relative h-80 rounded-2xl overflow-hidden cursor-none reveal">
+                        <img src="https://placehold.co/800x600/0f172a/06b6d4?text=Fitness+Dashboard" alt="Roxigym" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 group-hover:opacity-40 opacity-60">
+                        <div class="absolute inset-0 bg-gradient-to-t from-deep-navy via-transparent to-transparent"></div>
+                        
+                        <div class="absolute bottom-0 left-0 p-8 w-full">
+                            <div class="flex justify-between items-end">
+                                <div>
+                                    <h3 class="text-2xl font-bold text-white mb-2 font-orbitron">Roxigym</h3>
+                                    <p class="text-gray-300 text-sm max-w-xs">AI-driven fitness and nutrition personalization engine.</p>
+                                </div>
+                                <button data-project="roxi" class="project-trigger w-12 h-12 rounded-full bg-cyan-glow flex items-center justify-center text-white transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white hover:text-black">
+                                    <i data-lucide="arrow-up-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 4 -->
+                    <div class="group relative h-80 rounded-2xl overflow-hidden cursor-none reveal delay-100">
+                        <img src="https://placehold.co/800x600/0f172a/ffffff?text=Document+Scanner" alt="Resume Screener" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 group-hover:opacity-40 opacity-60">
+                        <div class="absolute inset-0 bg-gradient-to-t from-deep-navy via-transparent to-transparent"></div>
+                        
+                        <div class="absolute bottom-0 left-0 p-8 w-full">
+                            <div class="flex justify-between items-end">
+                                <div>
+                                    <h3 class="text-2xl font-bold text-white mb-2 font-orbitron">Smart Screener</h3>
+                                    <p class="text-gray-300 text-sm max-w-xs">Automated resume parsing using NLP and SpaCy.</p>
+                                </div>
+                                <button data-project="resume" class="project-trigger w-12 h-12 rounded-full bg-white flex items-center justify-center text-black transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 hover:bg-electric-blue hover:text-white">
+                                    <i data-lucide="arrow-up-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-24">
+            <div class="container mx-auto px-6 max-w-3xl">
+                <div class="glass-panel p-10 rounded-2xl reveal">
+                    <h2 class="text-3xl font-orbitron font-bold mb-6 text-center">
+                        Initiate_Communication
+                    </h2>
+                    
+                    <form id="contact-form" class="space-y-6">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label for="name" class="text-sm font-mono text-electric-blue">Input: Name</label>
+                                <input type="text" id="name" class="w-full bg-deep-navy/50 border border-gray-700 rounded-lg p-3 text-white focus:border-electric-blue focus:outline-none transition-colors hoverable" required>
+                            </div>
+                            <div class="space-y-2">
+                                <label for="email" class="text-sm font-mono text-electric-blue">Input: Email</label>
+                                <input type="email" id="email" class="w-full bg-deep-navy/50 border border-gray-700 rounded-lg p-3 text-white focus:border-electric-blue focus:outline-none transition-colors hoverable" required>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label for="message" class="text-sm font-mono text-electric-blue">Input: Message Payload</label>
+                            <textarea id="message" rows="4" class="w-full bg-deep-navy/50 border border-gray-700 rounded-lg p-3 text-white focus:border-electric-blue focus:outline-none transition-colors hoverable" required></textarea>
+                        </div>
+                        
+                        <button type="submit" id="submit-btn" class="w-full py-4 bg-electric-blue hover:bg-blue-600 text-white font-bold font-orbitron rounded-lg transition-all duration-300 hoverable shadow-lg hover:shadow-electric-blue/25">
+                            Send Data
+                        </button>
+                        <p id="form-message" class="text-center text-sm font-mono mt-4 h-6"></p>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Updated to 2025 -->
+        <footer class="py-10 border-t border-white/5">
+            <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
+                <div class="text-gray-500 text-sm font-mono mb-4 md:mb-0">
+                    &copy; 2025 MANTHAN MITTAL. ALL SYSTEMS NOMINAL.
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-500 hover:text-electric-blue transition-colors hoverable"><i data-lucide="github"></i></a>
+                    <a href="#" class="text-gray-500 hover:text-electric-blue transition-colors hoverable"><i data-lucide="linkedin"></i></a>
+                    <a href="#" class="text-gray-500 hover:text-electric-blue transition-colors hoverable"><i data-lucide="twitter"></i></a>
+                </div>
             </div>
         </footer>
     </div>
 
-    <!-- Container for dynamically loaded project content -->
-    <div id="project-detail-container" class="hidden">
-        <!-- Project content will be injected here -->
+    <!-- Project Detail Overlay -->
+    <div id="project-overlay" class="fixed inset-0 z-[60] bg-deep-navy/95 backdrop-blur-xl transform translate-y-full transition-transform duration-500 overflow-y-auto">
+        <div class="absolute top-6 right-6">
+            <button id="close-project" class="p-2 rounded-full bg-white/5 hover:bg-white/10 text-white transition-colors hoverable">
+                <i data-lucide="x" class="w-8 h-8"></i>
+            </button>
+        </div>
+        <div id="project-content-target" class="container mx-auto px-6 py-20 max-w-5xl">
+            <!-- Content injected via JS -->
+        </div>
     </div>
 
-    <!-- Project Content Templates -->
-    <template id="sleep-analysis-template">
-        <main class="container mx-auto px-6 pt-16 pb-16">
-            <div class="text-center mb-12">
-                <h1 class="text-5xl font-orbitron font-extrabold text-white text-glow">Sleep Pattern Analysis</h1>
-                <p class="text-xl text-gray-400 mt-4">AI-driven diagnostics for sleep disorders.</p>
-            </div>
-            <div class="mb-12 glass-card p-2 rounded-lg">
-                <img src="https://placehold.co/1200x600/0a0133/00f6ff?text=Sleep+Analysis+Details" alt="Project Screenshot" class="rounded-md w-full">
-            </div>
+    <!-- Template for Project Details (Reusable) -->
+    <template id="project-sleep">
+        <div class="animate-fade-in">
+            <span class="inline-block py-1 px-3 rounded border border-electric-blue text-electric-blue font-mono text-xs mb-4">MEDICAL AI</span>
+            <h1 class="text-4xl md:text-6xl font-orbitron font-bold text-white mb-6">Sleep Pattern Analysis</h1>
+            <p class="text-xl text-gray-300 font-sans mb-10 max-w-3xl">A deep learning system that automates the classification of sleep stages and detects anomalies in Polysomnography (PSG) data with 92% accuracy.</p>
+            
+            <img src="https://placehold.co/1200x600/0f172a/3b82f6?text=Detailed+Analysis+Dashboard" class="w-full rounded-xl border border-white/10 mb-12">
+
             <div class="grid md:grid-cols-3 gap-12">
-                <div class="md:col-span-2">
-                    <h2 class="text-3xl font-orbitron font-bold mb-4 text-glow-secondary">Project Overview</h2>
-                    <p class="text-gray-300 mb-4 text-lg">This project focuses on leveraging machine learning to analyze polysomnography (PSG) data, which includes EEG, EOG, and EMG signals recorded during sleep. The primary goal is to build a robust model capable of automatically identifying sleep stages and detecting anomalies like sleep apnea or insomnia patterns.</p>
-                    <p class="text-gray-300 text-lg">By automating this analysis, the system aims to provide clinicians with a powerful tool to accelerate diagnosis and improve the accuracy of sleep disorder assessments, ultimately leading to better patient outcomes.</p>
-                    <h3 class="text-2xl font-orbitron font-bold mt-8 mb-4 text-glow-secondary">Key Features</h3>
-                    <ul class="list-disc list-inside text-gray-300 space-y-2 text-lg">
-                        <li>Automated sleep stage classification (N1, N2, N3, REM).</li>
-                        <li>Anomaly detection for potential sleep disorders.</li>
-                        <li>Data visualization dashboard for clinical review.</li>
-                        <li>High-accuracy model trained on a diverse dataset.</li>
-                    </ul>
-                </div>
-                <div class="md:col-span-1">
-                    <div class="glass-card p-6 rounded-lg sticky top-24">
-                        <h3 class="text-2xl font-orbitron font-bold mb-4 text-glow-secondary">Tech Stack</h3>
-                        <div class="flex flex-wrap gap-2 mb-6">
-                            <span class="bg-cyan-900/50 text-cyan-300 text-sm font-medium px-2.5 py-0.5 rounded">Python</span>
-                            <span class="bg-cyan-900/50 text-cyan-300 text-sm font-medium px-2.5 py-0.5 rounded">TensorFlow</span>
-                            <span class="bg-cyan-900/50 text-cyan-300 text-sm font-medium px-2.5 py-0.5 rounded">Scikit-learn</span>
-                            <span class="bg-cyan-900/50 text-cyan-300 text-sm font-medium px-2.5 py-0.5 rounded">Pandas</span>
-                            <span class="bg-cyan-900/50 text-cyan-300 text-sm font-medium px-2.5 py-0.5 rounded">Matplotlib</span>
-                        </div>
-                        <h3 class="text-2xl font-orbitron font-bold mb-4 text-glow-secondary">Links</h3>
-                        <div class="flex flex-col space-y-4">
-                            <a href="#" target="_blank" class="text-center bg-cyan-500/10 border border-cyan-400 text-cyan-300 hover:bg-cyan-500/20 font-bold py-2 px-4 rounded transition-colors">View on GitHub</a>
-                            <a href="#" target="_blank" class="text-center bg-cyan-500/10 border border-cyan-400 text-cyan-300 hover:bg-cyan-500/20 font-bold py-2 px-4 rounded transition-colors">Live Demo</a>
-                        </div>
+                <div class="md:col-span-2 space-y-8 text-gray-400 leading-relaxed">
+                    <div>
+                        <h3 class="text-white font-orbitron text-xl mb-3">The Challenge</h3>
+                        <p>Manual sleep scoring is tedious and subjective. Clinicians spend hours analyzing PSG signals to diagnose disorders like apnea or insomnia.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-orbitron text-xl mb-3">The Solution</h3>
+                        <p>We engineered a Bi-Directional LSTM network capable of capturing temporal dependencies in EEG signals. The model was trained on the Sleep-EDF dataset, utilizing advanced data augmentation techniques to balance class distribution.</p>
                     </div>
                 </div>
+                <div class="glass-panel p-6 rounded-xl h-fit">
+                    <h4 class="font-bold text-white mb-4 font-rajdhani text-lg">Technologies</h4>
+                    <ul class="space-y-2 text-sm font-mono text-gray-400 mb-8">
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-electric-blue rounded-full"></span> Python 3.9</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-electric-blue rounded-full"></span> TensorFlow / Keras</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-electric-blue rounded-full"></span> Scikit-Learn</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-electric-blue rounded-full"></span> Matplotlib</li>
+                    </ul>
+                    <a href="#" class="block w-full py-3 bg-white text-black text-center font-bold rounded hover:bg-gray-200 transition-colors">View Repository</a>
+                </div>
             </div>
-        </main>
+        </div>
     </template>
 
-    <template id="mac-optimization-template">
-        <main class="container mx-auto px-6 pt-16 pb-16">
-            <div class="text-center mb-12">
-                <h1 class="text-5xl font-orbitron font-extrabold text-white text-glow">Random MAC Optimization Using DNN & GNN</h1>
-                <p class="text-xl text-gray-400 mt-4">Optimizing network performance with advanced neural networks.</p>
-            </div>
-            <div class="mb-12 glass-card p-2 rounded-lg">
-                <img src="https://placehold.co/1200x600/0a0133/7d2eff?text=MAC+Optimization+Details" alt="Project Screenshot" class="rounded-md w-full">
-            </div>
-            <div class="grid md:grid-cols-3 gap-12">
-                <div class="md:col-span-2">
-                    <h2 class="text-3xl font-orbitron font-bold mb-4 text-glow-secondary">Project Overview</h2>
-                    <p class="text-gray-300 mb-4 text-lg">This research project introduces a novel approach to optimizing Medium Access Control (MAC) protocols in wireless networks. By leveraging both Deep Neural Networks (DNNs) and Graph Neural Networks (GNNs), the system learns optimal channel access strategies to minimize collisions and maximize throughput in dense network environments.</p>
-                    <p class="text-gray-300 text-lg">The GNN captures the complex spatial relationships between network nodes, while the DNN predicts the best transmission parameters. This dual-architecture model significantly outperforms traditional contention-based protocols in simulated high-traffic scenarios.</p>
-                    <h3 class="text-2xl font-orbitron font-bold mt-8 mb-4 text-glow-secondary">Key Features</h3>
-                    <ul class="list-disc list-inside text-gray-300 space-y-2 text-lg">
-                        <li>Hybrid DNN-GNN architecture for MAC optimization.</li>
-                        <li>Dynamic adaptation to changing network topologies.</li>
-                        <li>Significant reduction in data packet collisions.</li>
-                        <li>Scalable solution for large-scale wireless networks.</li>
-                    </ul>
-                </div>
-                <div class="md:col-span-1">
-                    <div class="glass-card p-6 rounded-lg sticky top-24">
-                        <h3 class="text-2xl font-orbitron font-bold mb-4 text-glow-secondary">Tech Stack</h3>
-                        <div class="flex flex-wrap gap-2 mb-6">
-                            <span class="bg-purple-900/50 text-purple-300 text-sm font-medium px-2.5 py-0.5 rounded">Python</span>
-                            <span class="bg-purple-900/50 text-purple-300 text-sm font-medium px-2.5 py-0.5 rounded">PyTorch</span>
-                            <span class="bg-purple-900/50 text-purple-300 text-sm font-medium px-2.5 py-0.5 rounded">PyTorch Geometric</span>
-                            <span class="bg-purple-900/50 text-purple-300 text-sm font-medium px-2.5 py-0.5 rounded">NetworkX</span>
-                            <span class="bg-purple-900/50 text-purple-300 text-sm font-medium px-2.5 py-0.5 rounded">NumPy</span>
-                        </div>
-                        <h3 class="text-2xl font-orbitron font-bold mb-4 text-glow-secondary">Links</h3>
-                        <div class="flex flex-col space-y-4">
-                            <a href="#" target="_blank" class="text-center bg-purple-500/10 border border-purple-400 text-purple-300 hover:bg-purple-500/20 font-bold py-2 px-4 rounded transition-colors">View on GitHub</a>
-                            <a href="#" target="_blank" class="text-center bg-purple-500/10 border border-purple-400 text-purple-300 hover:bg-purple-500/20 font-bold py-2 px-4 rounded transition-colors">Live Demo</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </template>
-
-    <template id="roxigym-template">
-        <main class="container mx-auto px-6 pt-16 pb-16">
-            <div class="text-center mb-12">
-                <h1 class="text-5xl font-orbitron font-extrabold text-white text-glow">Roxigym – AI-Powered Fitness App</h1>
-                <p class="text-xl text-gray-400 mt-4">Your personal AI trainer for optimized workout and nutrition plans.</p>
-            </div>
-            <div class="mb-12 glass-card p-2 rounded-lg">
-                <img src="https://placehold.co/1200x600/0a0133/7d2eff?text=Roxigym+App" alt="Project Screenshot" class="rounded-md w-full">
-            </div>
-            <div class="grid md:grid-cols-3 gap-12">
-                <div class="md:col-span-2">
-                    <h2 class="text-3xl font-orbitron font-bold mb-4 text-glow-secondary">Project Overview</h2>
-                    <p class="text-gray-300 mb-4 text-lg">Roxigym is a comprehensive, full-stack fitness application designed to provide users with a truly personalized training experience. At its core, an intelligent AI engine analyzes user data—such as fitness goals, experience level, and available equipment—to generate dynamic workout routines and tailored nutrition plans.</p>
-                    <p class="text-gray-300 text-lg">The platform includes features for logging workouts, tracking progress over time with detailed analytics, and adjusting plans based on performance. The goal is to make elite-level fitness coaching accessible to everyone, adapting to their needs as they evolve on their fitness journey.</p>
-                    <h3 class="text-2xl font-orbitron font-bold mt-8 mb-4 text-glow-secondary">Key Features</h3>
-                    <ul class="list-disc list-inside text-gray-300 space-y-2 text-lg">
-                        <li>AI-driven personalized workout and meal plan generation.</li>
-                        <li>Interactive workout logger with exercise library.</li>
-                        <li>Progress tracking dashboard with charts and statistics.</li>
-                        <li>User authentication and secure data storage.</li>
-                    </ul>
-                </div>
-                <div class="md:col-span-1">
-                    <div class="glass-card p-6 rounded-lg sticky top-24">
-                        <h3 class="text-2xl font-orbitron font-bold mb-4 text-glow-secondary">Tech Stack</h3>
-                        <div class="flex flex-wrap gap-2 mb-6">
-                            <span class="bg-purple-900/50 text-purple-300 text-sm font-medium px-2.5 py-0.5 rounded">React</span>
-                            <span class="bg-purple-900/50 text-purple-300 text-sm font-medium px-2.5 py-0.5 rounded">Node.js</span>
-                            <span class="bg-purple-900/50 text-purple-300 text-sm font-medium px-2.5 py-0.5 rounded">Express.js</span>
-                            <span class="bg-purple-900/50 text-purple-300 text-sm font-medium px-2.5 py-0.5 rounded">MongoDB</span>
-                            <span class="bg-purple-900/50 text-purple-300 text-sm font-medium px-2.5 py-0.5 rounded">AI Engine (Python)</span>
-                        </div>
-                        <h3 class="text-2xl font-orbitron font-bold mb-4 text-glow-secondary">Links</h3>
-                        <div class="flex flex-col space-y-4">
-                            <a href="#" target="_blank" class="text-center bg-purple-500/10 border border-purple-400 text-purple-300 hover:bg-purple-500/20 font-bold py-2 px-4 rounded transition-colors">View on GitHub</a>
-                            <a href="#" target="_blank" class="text-center bg-purple-500/10 border border-purple-400 text-purple-300 hover:bg-purple-500/20 font-bold py-2 px-4 rounded transition-colors">Live Demo</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </template>
-
-    <template id="resume-screener-template">
-        <main class="container mx-auto px-6 pt-16 pb-16">
-            <div class="text-center mb-12">
-                <h1 class="text-5xl font-orbitron font-extrabold text-white text-glow">AI-Powered Resume Screening System</h1>
-                <p class="text-xl text-gray-400 mt-4">Streamlining recruitment with intelligent document analysis.</p>
-            </div>
-            <div class="mb-12 glass-card p-2 rounded-lg">
-                <img src="https://placehold.co/1200x600/0a0133/00f6ff?text=Resume+Screening+System" alt="Project Screenshot" class="rounded-md w-full">
-            </div>
-            <div class="grid md:grid-cols-3 gap-12">
-                <div class="md:col-span-2">
-                    <h2 class="text-3xl font-orbitron font-bold mb-4 text-glow-secondary">Project Overview</h2>
-                    <p class="text-gray-300 mb-4 text-lg">This project addresses a major bottleneck in the hiring process: manual resume screening. The AI-Powered Resume Screening System automates this task by using Natural Language Processing (NLP) to parse, analyze, and rank resumes based on their relevance to a specific job description.</p>
-                    <p class="text-gray-300 text-lg">The system extracts key information such as skills, experience, and education from resumes and compares it against the requirements of a job posting. It then calculates a similarity score, allowing recruiters to quickly identify the most promising candidates from a large pool of applicants, saving significant time and reducing human bias.</p>
-                    <h3 class="text-2xl font-orbitron font-bold mt-8 mb-4 text-glow-secondary">Key Features</h3>
-                    <ul class="list-disc list-inside text-gray-300 space-y-2 text-lg">
-                        <li>Automated extraction of skills, experience, and education.</li>
-                        <li>Job description matching and candidate scoring.</li>
-                        <li>Ranking of candidates based on relevance.</li>
-                        <li>Web-based interface for uploading resumes and job descriptions.</li>
-                    </ul>
-                </div>
-                <div class="md:col-span-1">
-                    <div class="glass-card p-6 rounded-lg sticky top-24">
-                        <h3 class="text-2xl font-orbitron font-bold mb-4 text-glow-secondary">Tech Stack</h3>
-                        <div class="flex flex-wrap gap-2 mb-6">
-                            <span class="bg-cyan-900/50 text-cyan-300 text-sm font-medium px-2.5 py-0.5 rounded">Python</span>
-                            <span class="bg-cyan-900/50 text-cyan-300 text-sm font-medium px-2.5 py-0.5 rounded">Flask</span>
-                            <span class="bg-cyan-900/50 text-cyan-300 text-sm font-medium px-2.5 py-0.5 rounded">NLTK/spaCy</span>
-                            <span class="bg-cyan-900/50 text-cyan-300 text-sm font-medium px-2.5 py-0.5 rounded">Scikit-learn</span>
-                            <span class="bg-cyan-900/50 text-cyan-300 text-sm font-medium px-2.5 py-0.5 rounded">NLP</span>
-                        </div>
-                        <h3 class="text-2xl font-orbitron font-bold mb-4 text-glow-secondary">Links</h3>
-                        <div class="flex flex-col space-y-4">
-                            <a href="#" target="_blank" class="text-center bg-cyan-500/10 border border-cyan-400 text-cyan-300 hover:bg-cyan-500/20 font-bold py-2 px-4 rounded transition-colors">View on GitHub</a>
-                            <a href="#" target="_blank" class="text-center bg-cyan-500/10 border border-cyan-400 text-cyan-300 hover:bg-cyan-500/20 font-bold py-2 px-4 rounded transition-colors">Live Demo</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </template>
-    
-    <!-- External Libraries -->
+    <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.2/dist/vanilla-tilt.min.js"></script>
     
-    <!-- Custom JavaScript -->
     <script type="module">
-        // --- Firebase SDKs (v9+) ---
+        // --- Imports & Init ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
 
-        // --- Firebase Configuration ---
+        lucide.createIcons();
+
         const firebaseConfig = {
             apiKey: "AIzaSyBNFJjL4ljhJ0Diu5xhz7MEjz13NXnJqIc",
             authDomain: "manthan-mittal.firebaseapp.com",
@@ -538,283 +598,201 @@
             measurementId: "G-PC28FBWG0L"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
-        
-        let isAuthReady = false;
+        let currentUser = null;
 
-        const contactForm = document.getElementById('contact-form');
-        const formMessage = document.getElementById('form-message');
+        signInAnonymously(auth).catch((error) => console.error("Auth Failed:", error));
+        onAuthStateChanged(auth, (user) => { if (user) currentUser = user; });
+
+        // Form Logic
+        const form = document.getElementById('contact-form');
+        const formMsg = document.getElementById('form-message');
         const submitBtn = document.getElementById('submit-btn');
 
-        signInAnonymously(auth)
-            .then(() => {
-                isAuthReady = true;
-            })
-            .catch((error) => {
-                console.error("Anonymous sign-in failed:", error);
-                formMessage.textContent = "Contact service is currently unavailable. Please try again later.";
-                formMessage.style.color = '#ef4444';
-                submitBtn.disabled = true;
-                submitBtn.classList.remove('glow-btn');
-                submitBtn.classList.add('bg-gray-700', 'cursor-not-allowed');
-            });
-
-        contactForm.addEventListener('submit', async (e) => {
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            if (!isAuthReady) {
-                formMessage.textContent = "Cannot send message. Contact service is not available.";
-                formMessage.style.color = '#ef4444';
-                return;
-            }
+            if (!currentUser) return; // Handle offline gracefull
+
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const message = document.getElementById('message').value;
+
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Sending...';
+            submitBtn.innerHTML = 'Processing...';
+
             try {
-                await addDoc(collection(db, "contacts"), { name, email, message, timestamp: serverTimestamp() });
-                formMessage.textContent = "Thank you! Your message has been sent successfully.";
-                formMessage.style.color = 'var(--primary-glow)';
-                contactForm.reset();
-            } catch (error) {
-                console.error("Error adding document: ", error);
-                if (error.code === 'permission-denied') {
-                    formMessage.textContent = "Error: Permission denied. Please check Firestore security rules.";
-                } else {
-                    formMessage.textContent = "Oops! Something went wrong. Please try again.";
-                }
-                formMessage.style.color = '#ef4444';
+                await addDoc(collection(db, "contacts"), {
+                    name, email, message, userId: currentUser.uid, timestamp: serverTimestamp()
+                });
+                formMsg.textContent = "Message Sent Successfully.";
+                formMsg.style.color = "#3b82f6";
+                form.reset();
+            } catch (err) {
+                formMsg.textContent = "Error Sending Message.";
+                formMsg.style.color = "red";
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'Send Message';
-                setTimeout(() => { formMessage.textContent = ""; }, 5000);
+                submitBtn.innerHTML = 'Send Data';
+                setTimeout(() => formMsg.textContent = '', 5000);
             }
         });
 
-        // --- Mobile Menu Toggle ---
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
+        // Cursor Logic
+        const cursor = document.getElementById('cursor');
+        const cursorDot = document.getElementById('cursor-dot');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.top = e.clientY + 'px';
+            cursor.style.left = e.clientX + 'px';
+            cursorDot.style.top = e.clientY + 'px';
+            cursorDot.style.left = e.clientX + 'px';
+        });
+        document.querySelectorAll('.hoverable').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
         });
 
-        // --- Navbar background on scroll ---
-        const navbar = document.getElementById('navbar');
-        window.addEventListener('scroll', () => {
-            navbar.style.background = window.scrollY > 50 ? 'rgba(10, 1, 51, 0.6)' : 'rgba(10, 1, 51, 0.3)';
-        });
-
-        // --- Smooth Scrolling ---
-        document.querySelectorAll('a[href^="#"]:not([href="#"])').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-
-                // Ensure main content is visible and project view is hidden
-                const mainContent = document.getElementById('main-content');
-                const projectDetailContainer = document.getElementById('project-detail-container');
-                mainContent.classList.remove('hidden');
-                projectDetailContainer.classList.add('hidden');
-                projectDetailContainer.innerHTML = ''; // Clear project content
-
-                if (targetElement) {
-                    targetElement.scrollIntoView({ behavior: 'smooth' });
-                }
-
-                if (!mobileMenu.classList.contains('hidden')) {
-                    mobileMenu.classList.add('hidden');
-                }
-            });
-        });
-
-        // --- Scroll Animations ---
-        const scrollElements = document.querySelectorAll('.scroll-animate');
-        const elementInView = (el, dividend = 1) => {
-            const elementTop = el.getBoundingClientRect().top;
-            return (elementTop <= (window.innerHeight || document.documentElement.clientHeight) / dividend);
-        };
-        const displayScrollElement = (element) => {
-            element.classList.add('visible');
-        };
-        const handleScrollAnimation = () => {
-            scrollElements.forEach((el) => {
-                if (elementInView(el, 1.25)) {
-                    displayScrollElement(el);
-                }
-            });
-        };
-        window.addEventListener('scroll', handleScrollAnimation);
-        handleScrollAnimation();
-
-        // --- Typing Effect ---
-        const typingTextElement = document.getElementById('typing-text');
-        const words = ["AI Engineer", "Innovator", "Deep Learning Specialist", "Problem Solver"];
-        let wordIndex = 0;
-        let charIndex = 0;
-        let isDeleting = false;
-
+        // Typing Effect
+        const words = ["Neural Networks", "Generative AI", "Computer Vision"];
+        let wordIndex = 0, charIndex = 0, isDeleting = false;
+        const typeElement = document.getElementById('typing-text');
         function type() {
             const currentWord = words[wordIndex];
-            if (isDeleting) {
-                typingTextElement.textContent = currentWord.substring(0, charIndex - 1);
-                charIndex--;
-            } else {
-                typingTextElement.textContent = currentWord.substring(0, charIndex + 1);
-                charIndex++;
-            }
-            if (!isDeleting && charIndex === currentWord.length) {
-                setTimeout(() => isDeleting = true, 2000);
-            } else if (isDeleting && charIndex === 0) {
-                isDeleting = false;
-                wordIndex = (wordIndex + 1) % words.length;
-            }
-            const typeSpeed = isDeleting ? 100 : 200;
-            setTimeout(type, typeSpeed);
+            typeElement.textContent = currentWord.substring(0, charIndex + (isDeleting ? -1 : 1));
+            charIndex += isDeleting ? -1 : 1;
+            if(!isDeleting && charIndex === currentWord.length) setTimeout(() => isDeleting = true, 2000);
+            else if(isDeleting && charIndex === 0) { isDeleting = false; wordIndex = (wordIndex + 1) % words.length; }
+            setTimeout(type, isDeleting ? 50 : 100);
         }
-        document.addEventListener('DOMContentLoaded', type);
-        
-        // --- 3D Tilt Effect ---
-        VanillaTilt.init(document.querySelectorAll("[data-tilt]"), {
-            max: 15,
-            speed: 400,
-            glare: true,
-            "max-glare": 0.2
-        });
+        type();
 
-        // --- Project Page Dynamic Loading (Template Method) ---
-        const mainContent = document.getElementById('main-content');
-        const projectDetailContainer = document.getElementById('project-detail-container');
+        // Scroll Reveal
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('active'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        document.querySelectorAll('.project-link').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const templateId = e.currentTarget.dataset.project;
-                const template = document.querySelector(templateId);
-
-                if (template) {
-                    const clone = template.content.cloneNode(true);
-                    
-                    const backButton = document.createElement('div');
-                    backButton.className = 'container mx-auto px-6 pt-24 pb-4';
-                    backButton.innerHTML = `<button id="close-project-btn" class="text-gray-300 hover:text-white hover:text-glow-secondary transition-all duration-300">&larr; Back to All Projects</button>`;
-                    
-                    projectDetailContainer.innerHTML = ''; // Clear previous content
-                    projectDetailContainer.appendChild(backButton);
-                    projectDetailContainer.appendChild(clone);
-                    
-                    mainContent.classList.add('hidden');
-                    projectDetailContainer.classList.remove('hidden');
-                    window.scrollTo(0, 0);
-
-                    document.getElementById('close-project-btn').addEventListener('click', () => {
-                        mainContent.classList.remove('hidden');
-                        projectDetailContainer.classList.add('hidden');
-                        projectDetailContainer.innerHTML = '';
-                    });
-                } else {
-                    console.error('Project template not found:', templateId);
-                }
+        // Project Modal
+        const overlay = document.getElementById('project-overlay');
+        const overlayContent = document.getElementById('project-content-target');
+        document.querySelectorAll('.project-trigger').forEach(btn => {
+            btn.addEventListener('click', () => {
+                let template = document.getElementById(`project-${btn.dataset.project}`) || document.getElementById('project-sleep');
+                overlayContent.innerHTML = '';
+                overlayContent.appendChild(template.content.cloneNode(true));
+                overlay.classList.remove('translate-y-full');
+                document.body.style.overflow = 'hidden';
             });
         });
+        document.getElementById('close-project').addEventListener('click', () => {
+            overlay.classList.add('translate-y-full');
+            document.body.style.overflow = 'auto';
+        });
+
+        // Mobile Menu
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+    </script>
+
+    <!-- Updated 3D Wave Animation Script -->
+    <script>
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         
-        // --- Enhanced three.js Particle Background ---
-        let scene, camera, renderer, particles, lines;
-        let positions, linePositions, lineColors;
-        const particleCount = 200;
-        const connectionDistance = 100;
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        container.appendChild(renderer.domElement);
 
-        function init3D() {
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
-            camera.position.z = 500;
+        // Creating a Grid of Particles for the Wave
+        const SEPARATION = 1.5;
+        const AMOUNTX = 80;
+        const AMOUNTY = 80;
+        const particlesGeometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(AMOUNTX * AMOUNTY * 3);
+        const colors = new Float32Array(AMOUNTX * AMOUNTY * 3);
 
-            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), alpha: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-
-            const pMaterial = new THREE.PointsMaterial({ color: 0x00f6ff, size: 3, blending: THREE.AdditiveBlending, transparent: true, sizeAttenuation: true });
-            const pGeometry = new THREE.BufferGeometry();
-            positions = new Float32Array(particleCount * 3);
-            const velocities = new Float32Array(particleCount * 3);
-            for (let i = 0; i < particleCount * 3; i++) {
-                positions[i] = (Math.random() - 0.5) * 1000;
-                velocities[i] = (Math.random() - 0.5) * 0.5;
+        // Initialize positions in a grid
+        let i = 0;
+        for (let ix = 0; ix < AMOUNTX; ix++) {
+            for (let iy = 0; iy < AMOUNTY; iy++) {
+                positions[i] = ix * SEPARATION - ((AMOUNTX * SEPARATION) / 2); // x
+                positions[i + 1] = 0; // y (height) - will be animated
+                positions[i + 2] = iy * SEPARATION - ((AMOUNTY * SEPARATION) / 2); // z
+                
+                // Initial Color - Electric Blue Gradient
+                colors[i] = 0.23; // R
+                colors[i + 1] = 0.51; // G
+                colors[i + 2] = 0.96; // B
+                
+                i += 3;
             }
-            pGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3).setUsage(THREE.DynamicDrawUsage));
-            pGeometry.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3));
-            particles = new THREE.Points(pGeometry, pMaterial);
-            scene.add(particles);
-
-            const lGeometry = new THREE.BufferGeometry();
-            linePositions = new Float32Array(particleCount * particleCount * 3);
-            lineColors = new Float32Array(particleCount * particleCount * 3);
-            lGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions, 3).setUsage(THREE.DynamicDrawUsage));
-            lGeometry.setAttribute('color', new THREE.BufferAttribute(lineColors, 3).setUsage(THREE.DynamicDrawUsage));
-            const lMaterial = new THREE.LineBasicMaterial({ vertexColors: true, blending: THREE.AdditiveBlending, transparent: true });
-            lines = new THREE.LineSegments(lGeometry, lMaterial);
-            scene.add(lines);
-
-            animate();
         }
 
-        let mouseX = 0, mouseY = 0;
-        document.addEventListener('mousemove', (event) => {
-            mouseX = event.clientX - window.innerWidth / 2;
-            mouseY = event.clientY - window.innerHeight / 2;
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.12,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.8
         });
+
+        const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particles);
+
+        // Camera Positioning
+        camera.position.y = 30;
+        camera.position.z = 60;
+        camera.rotation.x = -0.3;
+
+        let count = 0;
 
         function animate() {
             requestAnimationFrame(animate);
-            let vertexpos = 0, colorpos = 0, numConnected = 0;
-            for (let i = 0; i < particleCount; i++) {
-                positions[i * 3] += particles.geometry.attributes.velocity.array[i * 3];
-                positions[i * 3 + 1] += particles.geometry.attributes.velocity.array[i * 3 + 1];
-                if (positions[i * 3 + 1] < -500 || positions[i * 3 + 1] > 500) particles.geometry.attributes.velocity.array[i * 3 + 1] *= -1;
-                if (positions[i * 3] < -500 || positions[i * 3] > 500) particles.geometry.attributes.velocity.array[i * 3] *= -1;
-                for (let j = i + 1; j < particleCount; j++) {
-                    const dx = positions[i * 3] - positions[j * 3];
-                    const dy = positions[i * 3 + 1] - positions[j * 3 + 1];
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < connectionDistance) {
-                        const alpha = 1.0 - dist / connectionDistance;
-                        linePositions[vertexpos++] = positions[i * 3];
-                        linePositions[vertexpos++] = positions[i * 3 + 1];
-                        linePositions[vertexpos++] = 0;
-                        linePositions[vertexpos++] = positions[j * 3];
-                        linePositions[vertexpos++] = positions[j * 3 + 1];
-                        linePositions[vertexpos++] = 0;
-                        lineColors[colorpos++] = alpha;
-                        lineColors[colorpos++] = alpha;
-                        lineColors[colorpos++] = 1;
-                        lineColors[colorpos++] = alpha;
-                        lineColors[colorpos++] = alpha;
-                        lineColors[colorpos++] = 1;
-                        numConnected++;
-                    }
+
+            const positions = particles.geometry.attributes.position.array;
+            const colors = particles.geometry.attributes.color.array;
+            
+            let i = 0;
+            for (let ix = 0; ix < AMOUNTX; ix++) {
+                for (let iy = 0; iy < AMOUNTY; iy++) {
+                    // Wave Formula: Sinusoidal movement on Y axis based on X, Z and Time
+                    const value = (Math.sin((ix + count) * 0.3) * 2) + (Math.sin((iy + count) * 0.5) * 2);
+                    
+                    positions[i + 1] = value;
+                    
+                    // Dynamic Color Change based on Height
+                    // Higher points = Violet/White, Lower points = Deep Blue
+                    const intensity = (value + 4) / 8; // normalize
+                    colors[i] = 0.2 + intensity * 0.5;     // R (increases with height)
+                    colors[i+1] = 0.5 - intensity * 0.2;   // G (decreases)
+                    colors[i+2] = 1.0;                     // B (stays blue)
+                    
+                    i += 3;
                 }
             }
-            lines.geometry.setDrawRange(0, numConnected * 2);
-            lines.geometry.attributes.position.needsUpdate = true;
-            lines.geometry.attributes.color.needsUpdate = true;
+
             particles.geometry.attributes.position.needsUpdate = true;
-            camera.position.x += (mouseX - camera.position.x) * 0.01;
-            camera.position.y += (-mouseY - camera.position.y) * 0.01;
-            camera.lookAt(scene.position);
+            particles.geometry.attributes.color.needsUpdate = true;
+
+            // Gentle Rotation
+            particles.rotation.y += 0.001;
+
+            count += 0.05; // Speed of wave
             renderer.render(scene, camera);
         }
 
-        function onWindowResize() {
+        window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
-        }
+        });
 
-        window.addEventListener('resize', onWindowResize, false);
-        init3D();
+        animate();
     </script>
-
 </body>
 </html>
